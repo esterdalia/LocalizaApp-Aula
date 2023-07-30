@@ -1,57 +1,58 @@
-import React , { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
-interface User{
-    id: number;
-    nome: string;
-    email: string;
+interface User {
+  id: number;
+  nome: string;
+  email: string;
 
 }
 
-const UserCrud: React.FC=() => {
-    const [users,setUsers] = useState<User[]>([]);
-    const [newUser,setNewUser]=useState<User>({id:0, nome:'', email:''});
-    const [editingUserId, setEditingUserId]=useState<number | null>(null);
+const UserCrud: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [newUser, setNewUser] = useState<User>({ id: 0, nome: '', email: '' });
+  const [editingUserId, setEditingUserId] = useState<number | null>(null);
 
-    useEffect(()=>{
-        const storedUsers = localStorage.getItem('users');
-        if (storedUsers){
-            setUsers(JSON.parse(storedUsers));
-        }
-    },[]);
-    useEffect(()=>{
-        localStorage.setItem('users',JSON.stringify(users));
-},[users]);
-
-const handleInputChange=(event:React.ChangeEvent<HTMLInputElement>):void => {
-    const {name,value}=event.target;
-    setNewUser((prevState)=>({ ...prevState, [name]: value}))
-};
-
-const handleAddUser =(): void => {
-    setUsers ((prevState)=>[...prevState, {...newUser,id:Date.now()}])
-    setNewUser({id:0, nome:'', email:''});
-};
-
-const handleEditUser=(id: number):void=>{
-    const userToEdit = users.find ((user)=>user.id===id);
-    if(userToEdit){
-        setEditingUserId(id);
-        setNewUser(userToEdit);
+  useEffect(() => {
+    const storedUsers = localStorage.getItem('users');
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
     }
-};
+  }, []);
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(users));
+  }, [users]);
 
-const handleUpdateUser = (): void => {
-    setUsers ((prevState)=>
-    prevState.map ((user) =>(user.id ===newUser.id? {...newUser}:user))
-);
-setEditingUserId(null);
-setNewUser({id:0,nome:'',email:''});
-;}
-const handleDeleteUser= (id:number):void=>{
-    setUsers ((prevState)=>prevState.filter((user)=>user.id !==id));   
-};
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value } = event.target;
+    setNewUser((prevState) => ({ ...prevState, [name]: value }))
+  };
 
-return (
+  const handleAddUser = (): void => {
+    setUsers((prevState) => [...prevState, { ...newUser, id: Date.now() }])
+    setNewUser({ id: 0, nome: '', email: '' });
+  };
+
+  const handleEditUser = (id: number): void => {
+    const userToEdit = users.find((user) => user.id === id);
+    if (userToEdit) {
+      setEditingUserId(id);
+      setNewUser(userToEdit);
+    }
+  };
+
+  const handleUpdateUser = (): void => {
+    setUsers((prevState) =>
+      prevState.map((user) => (user.id === newUser.id ? { ...newUser } : user))
+    );
+    setEditingUserId(null);
+    setNewUser({ id: 0, nome: '', email: '' });
+    ;
+  }
+  const handleDeleteUser = (id: number): void => {
+    setUsers((prevState) => prevState.filter((user) => user.id !== id));
+  };
+
+  return (
     <div>
       <h2>Usuários</h2>
       <ul>
